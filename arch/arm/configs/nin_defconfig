@@ -1,6 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
+<<<<<<< HEAD:arch/arm/configs/nin_defconfig
 # Linux/arm 3.4.16 Kernel Configuration
+=======
+# Linux/arm 3.4.13 Kernel Configuration
+>>>>>>> a7fb296... Linux 3.4.24:arch/arm/configs/lizard_defconfig
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -39,7 +43,11 @@ CONFIG_IRQ_WORK=y
 CONFIG_EXPERIMENTAL=y
 CONFIG_INIT_ENV_ARG_LIMIT=32
 CONFIG_CROSS_COMPILE=""
+<<<<<<< HEAD:arch/arm/configs/nin_defconfig
 CONFIG_LOCALVERSION="-Sarin-Gas-v19"
+=======
+CONFIG_LOCALVERSION="-Arc_Reactor-v0.4"
+>>>>>>> a7fb296... Linux 3.4.24:arch/arm/configs/lizard_defconfig
 # CONFIG_LOCALVERSION_AUTO is not set
 CONFIG_HAVE_KERNEL_GZIP=y
 CONFIG_HAVE_KERNEL_LZMA=y
