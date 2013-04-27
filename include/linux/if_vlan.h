@@ -241,7 +241,7 @@ static inline void vlan_set_encap_proto(struct sk_buff *skb,
 					struct vlan_hdr *vhdr)
 {
 	__be16 proto;
-	unsigned char *rawp;
+	unsigned short *rawp;
 
 
 	proto = vhdr->h_vlan_encapsulated_proto;
@@ -252,6 +252,15 @@ static inline void vlan_set_encap_proto(struct sk_buff *skb,
 
 	rawp = skb->data;
 	if (*(unsigned short *) rawp == 0xFFFF)
+	rawp = (unsigned short *)(vhdr + 1);
+	if (*rawp == 0xFFFF)
+		/*
+		 * This is a magic hack to spot IPX packets. Older Novell
+		 * breaks the protocol design and runs IPX over 802.3 without
+		 * an 802.2 LLC layer. We look for FFFF which isn't a used
+		 * 802.2 SSAP/DSAP. This won't work for fault tolerant netware
+		 * but does for the rest.
+		 */
 		skb->protocol = htons(ETH_P_802_3);
 	else
 		skb->protocol = htons(ETH_P_802_2);
