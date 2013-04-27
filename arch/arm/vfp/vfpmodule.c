@@ -268,7 +268,12 @@ void VFP_bounce(u32 trigger, u32 fpexc, struct pt_regs *regs)
 	if (exceptions)
 		vfp_raise_exceptions(exceptions, trigger, orig_fpscr, regs);
 
-	if (fpexc ^ (FPEXC_EX | FPEXC_FP2V))
+	/*
+	 * If there isn't a second FP instruction, exit now. Note that
+	 * the FPEXC.FP2V bit is valid only if FPEXC.EX is 1.
+	 */
+	if ((fpexc & (FPEXC_EX | FPEXC_FP2V)) != (FPEXC_EX | FPEXC_FP2V))
+
 		goto exit;
 
 	barrier();
