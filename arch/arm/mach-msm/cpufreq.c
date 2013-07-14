@@ -31,7 +31,7 @@
 #include <mach/cpufreq.h>
 
 #include "acpuclock.h"
-#ifdef CONFIG_PERFLOCK
+#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
 #include <mach/perflock.h>
 #endif
 
@@ -73,7 +73,7 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq)
 	int saved_sched_policy = -EINVAL;
 	int saved_sched_rt_prio = -EINVAL;
 
-#ifdef CONFIG_PERFLOCK
+#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
 	int perf_freq = 0;
 #endif
 	struct cpufreq_freqs freqs;
@@ -91,7 +91,7 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq)
 		}
 	}
 	freqs.old = policy->cur;
-#ifdef CONFIG_PERFLOCK
+#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
 	perf_freq = perflock_override(policy, new_freq);
 	if (perf_freq) {
 		if (policy->cur == perf_freq)
