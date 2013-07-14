@@ -1328,9 +1328,7 @@ __acquires(&gcwq->lock)
 
 	spin_unlock_irq(&gcwq->lock);
 
-	smp_wmb();	/* paired with test_and_set_bit(PENDING) */
 	work_clear_pending(work);
-
 	lock_map_acquire_read(&cwq->wq->lockdep_map);
 	lock_map_acquire(&lockdep_map);
 	trace_workqueue_execute_start(work);
@@ -2351,7 +2349,7 @@ __acquires(&gcwq->lock)
 	}
 }
 
-static int __devinit workqueue_cpu_callback(struct notifier_block *nfb,
+static int workqueue_cpu_callback(struct notifier_block *nfb,
 						unsigned long action,
 						void *hcpu)
 {
@@ -2433,7 +2431,7 @@ static int __devinit workqueue_cpu_callback(struct notifier_block *nfb,
 	return notifier_from_errno(0);
 }
 
-static int __devinit workqueue_cpu_up_callback(struct notifier_block *nfb,
+static int workqueue_cpu_up_callback(struct notifier_block *nfb,
 					       unsigned long action,
 					       void *hcpu)
 {
@@ -2447,7 +2445,7 @@ static int __devinit workqueue_cpu_up_callback(struct notifier_block *nfb,
 	return NOTIFY_OK;
 }
 
-static int __devinit workqueue_cpu_down_callback(struct notifier_block *nfb,
+static int workqueue_cpu_down_callback(struct notifier_block *nfb,
 						 unsigned long action,
 						 void *hcpu)
 {
@@ -2518,8 +2516,11 @@ void freeze_workqueues_begin(void)
 		gcwq->flags |= GCWQ_FREEZING;
 
 		list_for_each_entry(wq, &workqueues, list) {
-			struct cpu_workqueue_struct *cwq = get_cwq(cpu, wq);
-
+			struct cpu_workqueue_struct *cwq;
+			if (cpu < CONFIG_NR_CPUS)
+                                cwq = get_cwq(cpu, wq);
+                        else
+                                continue;
 			if (cwq && wq->flags & WQ_FREEZABLE)
 				cwq->max_active = 0;
 		}
@@ -2542,7 +2543,11 @@ bool freeze_workqueues_busy(void)
 	for_each_gcwq_cpu(cpu) {
 		struct workqueue_struct *wq;
 		list_for_each_entry(wq, &workqueues, list) {
-			struct cpu_workqueue_struct *cwq = get_cwq(cpu, wq);
+			struct cpu_workqueue_struct *cwq;
+			if (cpu < CONFIG_NR_CPUS)
+                                cwq = get_cwq(cpu, wq);
+                        else
+                                continue;
 
 			if (!cwq || !(wq->flags & WQ_FREEZABLE))
 				continue;
