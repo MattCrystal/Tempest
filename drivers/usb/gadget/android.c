@@ -983,14 +983,8 @@ static struct android_usb_function ccid_function = {
 static int mtp_function_init(struct android_usb_function *f,
 		struct usb_composite_dev *cdev)
 {
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
-	struct android_dev *dev = _android_dev;
-#endif
 	int ret;
 	ret = mtp_setup();
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
-	mtp_setup_perflock(dev->pdata->mtp_perf_lock_on?true:false);
-#endif
 	return ret;
 }
 
