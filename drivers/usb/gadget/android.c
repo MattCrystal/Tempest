@@ -81,7 +81,7 @@ static int os_type;
 #include <linux/usb/htc_info.h>
 #include "f_projector.c"
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 #include <mach/perflock.h>
 #endif
 
@@ -167,7 +167,7 @@ static struct android_dev *_android_dev;
 static int android_bind_config(struct usb_configuration *c);
 static void android_unbind_config(struct usb_configuration *c);
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 static struct perf_lock android_usb_perf_lock;
 #endif
 
@@ -255,7 +255,7 @@ static void android_work(struct work_struct *data)
 	struct android_usb_function *f;
 	int count = 0;
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 	if (is_perf_lock_active(&android_usb_perf_lock)) {
 		pr_info("Performance lock released\n");
 		perf_unlock(&android_usb_perf_lock);
@@ -286,7 +286,7 @@ static void android_work(struct work_struct *data)
 	spin_unlock_irqrestore(&cdev->lock, flags);
 
 	if (cdev->config && count) {
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 		if (!is_perf_lock_active(&android_usb_perf_lock)) {
 			pr_info("Performance lock requested\n");
 			perf_lock(&android_usb_perf_lock);
@@ -532,7 +532,7 @@ static void rmnet_function_cleanup(struct android_usb_function *f)
 static int rmnet_function_bind_config(struct android_usb_function *f,
 					 struct usb_configuration *c)
 {
-	int i = 0, err = 0;
+	int i, err = 0;
 
 	for (i = 0; i < rmnet_nports; i++) {
 		err = frmnet_bind_config(c, i);
@@ -2511,7 +2511,7 @@ static int __init init(void)
 
 	_android_dev = dev;
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 	perf_lock_init(&android_usb_perf_lock, TYPE_PERF_LOCK, PERF_LOCK_LOW, "android_usb");
 #endif
 

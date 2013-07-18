@@ -121,7 +121,7 @@
 #include "linux/mfd/pm8xxx/pm8921-charger.h"
 #endif
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 #include <mach/perflock.h>
 #endif
 
@@ -4164,7 +4164,7 @@ static struct msm_spm_platform_data msm_spm_data[] __initdata = {
 	},
 };
 
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 static unsigned jet_perf_acpu_table[] = {
 	594000000, 
 	810000000, 
@@ -4781,7 +4781,7 @@ static struct platform_device *common_devices[] __initdata = {
 	&htc_battery_pdev,
 #endif
 	&msm_tsens_device,
-#if defined(CONFIG_PERFLOCK) && !defined(CONFIG_PERFLOCK_HACK)
+#ifdef CONFIG_PERFLOCK
 	&msm8960_device_perf_lock,
 #endif
 };
