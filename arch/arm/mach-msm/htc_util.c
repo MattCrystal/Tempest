@@ -252,6 +252,10 @@ void htc_pm_monitor_work(struct work_struct *work)
 	htc_timer_stats_onoff('0');
 	htc_timer_stats_show(300);
 	htc_timer_stats_onoff('1');
+#ifdef CONFIG_PERFLOCK
+	htc_print_active_perf_locks();
+#endif
+	
 	
 	htc_print_active_wake_locks(WAKE_LOCK_SUSPEND);
 	htc_print_vddmin_gpio_status();
