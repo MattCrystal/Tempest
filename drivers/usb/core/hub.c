@@ -1923,58 +1923,6 @@ static int hub_port_wait_reset(struct usb_hub *hub, int port1,
 		 * connection may bounce if multiple warm resets were issued,
 		 * but the device may have successfully re-connected. Ignore it.
 		 */
-<<<<<<< HEAD
-		if (!warm) {
-			if (hub_port_warm_reset_required(hub, portstatus)) {
-				int ret;
-
-				if ((portchange & USB_PORT_STAT_C_CONNECTION))
-					clear_port_feature(hub->hdev, port1,
-							USB_PORT_FEAT_C_CONNECTION);
-				if (portchange & USB_PORT_STAT_C_LINK_STATE)
-					clear_port_feature(hub->hdev, port1,
-							USB_PORT_FEAT_C_PORT_LINK_STATE);
-				if (portchange & USB_PORT_STAT_C_RESET)
-					clear_port_feature(hub->hdev, port1,
-							USB_PORT_FEAT_C_RESET);
-				dev_dbg(hub->intfdev, "hot reset failed, warm reset port %d\n",
-						port1);
-				ret = hub_port_reset(hub, port1,
-						udev, HUB_BH_RESET_TIME,
-						true);
-				if ((portchange & USB_PORT_STAT_C_CONNECTION))
-					clear_port_feature(hub->hdev, port1,
-							USB_PORT_FEAT_C_CONNECTION);
-				return ret;
-			}
-			
-			if (!(portstatus & USB_PORT_STAT_CONNECTION))
-				return -ENOTCONN;
-
-			
-			if ((portchange & USB_PORT_STAT_C_CONNECTION))
-				return -ENOTCONN;
-
-
-			if ((portstatus & USB_PORT_STAT_ENABLE)) {
-				if (hub_is_wusb(hub))
-					udev->speed = USB_SPEED_WIRELESS;
-				else if (hub_is_superspeed(hub->hdev))
-					udev->speed = USB_SPEED_SUPER;
-				else if (portstatus & USB_PORT_STAT_HIGH_SPEED)
-					udev->speed = USB_SPEED_HIGH;
-				else if (portstatus & USB_PORT_STAT_LOW_SPEED)
-					udev->speed = USB_SPEED_LOW;
-				else
-					udev->speed = USB_SPEED_FULL;
-				return 0;
-			}
-		} else {
-			if (!(portstatus & USB_PORT_STAT_CONNECTION) ||
-					hub_port_warm_reset_required(hub,
-						portstatus))
-				return -ENOTCONN;
-=======
 		if (!hub_is_superspeed(hub->hdev) &&
 				(portchange & USB_PORT_STAT_C_CONNECTION))
 			return -ENOTCONN;
@@ -1993,7 +1941,7 @@ static int hub_port_wait_reset(struct usb_hub *hub, int port1,
 				udev->speed = USB_SPEED_LOW;
 			else
 				udev->speed = USB_SPEED_FULL;
->>>>>>> d903e63... Linux 3.4.36
+
 			return 0;
 		}
 delay:
@@ -2014,18 +1962,12 @@ static void hub_port_finish_reset(struct usb_hub *hub, int port1,
 {
 	switch (*status) {
 	case 0:
-<<<<<<< HEAD
-		if (!warm) {
-			struct usb_hcd *hcd;
-			
-			msleep(10 + 40);
-=======
+
 		/* TRSTRCY = 10 ms; plus some extra */
 		msleep(10 + 40);
 		if (udev) {
 			struct usb_hcd *hcd = bus_to_hcd(udev->bus);
 
->>>>>>> d903e63... Linux 3.4.36
 			update_devnum(udev, 0);
 			/* The xHC may think the device is already reset,
 			 * so ignore the status.

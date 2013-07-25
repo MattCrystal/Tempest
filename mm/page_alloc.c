@@ -3288,9 +3288,6 @@ static void __meminit calculate_node_totalpages(struct pglist_data *pgdat,
 }
 
 #ifndef CONFIG_SPARSEMEM
-<<<<<<< HEAD
-static unsigned long __init usemap_size(unsigned long zonesize)
-=======
 /*
  * Calculate the size of the zone->blockflags rounded to an unsigned long
  * Start by making sure zonesize is a multiple of pageblock_order by rounding
@@ -3299,7 +3296,7 @@ static unsigned long __init usemap_size(unsigned long zonesize)
  * bytes.
  */
 static unsigned long __init usemap_size(unsigned long zone_start_pfn, unsigned long zonesize)
->>>>>>> 8081588... Linux 3.4.34
+
 {
 	unsigned long usemapsize;
 
